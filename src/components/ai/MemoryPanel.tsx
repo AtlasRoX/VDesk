@@ -10,6 +10,15 @@ export default function MemoryPanel({ onMemoryChanged }: MemoryPanelProps) {
     return MemoryStore.getMemory();
   });
 
+  const [nimKeyInput, setNimKeyInput] = useState(() => {
+    return (typeof window !== "undefined" ? localStorage.getItem("NIM_API_KEY") : "") || "";
+  });
+
+  const handleSaveNimKey = () => {
+    localStorage.setItem("NIM_API_KEY", nimKeyInput.trim());
+    alert("NVIDIA NIM API Key updated successfully!");
+  };
+
   const refreshMemory = () => {
     setMemory(MemoryStore.getMemory());
     onMemoryChanged();
@@ -64,9 +73,30 @@ export default function MemoryPanel({ onMemoryChanged }: MemoryPanelProps) {
         </button>
       </div>
 
+      {/* NVIDIA NIM API Key Credentials Block */}
+      <div className="bg-zinc-950/40 border border-zinc-850 rounded p-3.5 space-y-2.5 text-[10px] font-mono">
+        <div className="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">NVIDIA NIM API Credentials</div>
+        <div className="text-zinc-500 leading-normal">Configure your multi-model routing engine to enable live real-time screen audits and diagnostic reasoning.</div>
+        <div className="flex gap-2">
+          <input
+            type="password"
+            placeholder={nimKeyInput ? "••••••••••••••••" : "Enter NVIDIA NIM API Key"}
+            value={nimKeyInput}
+            onChange={(e) => setNimKeyInput(e.target.value)}
+            className="grow px-2.5 py-1.5 bg-zinc-950 border border-zinc-850 rounded text-zinc-300 outline-none focus:border-blue-500 transition text-[9px]"
+          />
+          <button
+            onClick={handleSaveNimKey}
+            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold shadow text-[9px] select-none active:scale-[0.98] transition cursor-pointer"
+          >
+            SAVE
+          </button>
+        </div>
+      </div>
+
       {!memory.enabled ? (
         <div className="p-4 bg-zinc-950/60 border border-zinc-850 border-dashed rounded text-center text-zinc-500 font-mono text-[10px]">
-          ⚠️ Memory system is disabled. No layout snapshots or activity logs are being recorded.
+          [WARNING] Memory system is disabled. No layout snapshots or activity logs are being recorded.
         </div>
       ) : (
         <div className="space-y-4 font-mono text-[10px]">
@@ -172,7 +202,7 @@ export default function MemoryPanel({ onMemoryChanged }: MemoryPanelProps) {
               onClick={handleClearAll}
               className="px-2.5 py-1 text-[9px] bg-red-950/20 hover:bg-red-950/50 text-red-400 border border-red-900 rounded transition font-bold"
             >
-              ☢ Erase All AI Memories
+              [ERASE ALL] Erase All AI Memories
             </button>
           </div>
         </div>

@@ -377,24 +377,19 @@ export default function AIPanel({
     setDismissedIds((prev) => [...prev, id]);
   };
 
-
-
-
-
   return (
     <>
       {/* Floating Toggle Icon Command Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-zinc-900 border border-zinc-800 hover:bg-zinc-850 hover:border-zinc-700 text-white rounded-full shadow-2xl transition duration-150 flex items-center justify-center cursor-pointer select-none font-mono text-xs gap-1.5 active:scale-95"
+        className="fixed bottom-6 right-6 z-50 p-4 bg-zinc-900 border border-zinc-800 hover:bg-zinc-850 hover:border-zinc-700 text-white rounded-full shadow-2xl transition duration-150 flex items-center justify-center cursor-pointer select-none font-mono text-xs gap-1.5 active:scale-95 animate-pulse"
       >
-        <span>🤖</span>
-        <span>{isOpen ? 'Close Command Center' : 'AI Command Center'}</span>
+        <span>AI COMMAND CENTER</span>
       </button>
 
       {/* Slide-out Sidebar Control Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-[360px] bg-zinc-950/98 border-l border-zinc-850 z-40 transform transition-transform duration-200 ease-out shadow-2xl flex flex-col justify-between p-6 ${
+        className={`fixed top-0 right-0 h-full w-[360px] bg-zinc-955/98 border-l border-zinc-850 z-40 transform transition-transform duration-200 ease-out shadow-2xl flex flex-col justify-between p-6 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -410,9 +405,9 @@ export default function AIPanel({
           {/* Core Tabs Navigation */}
           <div className="grid grid-cols-3 gap-1 bg-zinc-900 p-1 border border-zinc-850 rounded">
             {([
-              { id: 'cockpit', label: '🎛️ Command' },
-              { id: 'automations', label: '⚡ Auto' },
-              { id: 'memory', label: '🧠 Memory' }
+              { id: 'cockpit', label: 'Command' },
+              { id: 'automations', label: 'Automate' },
+              { id: 'memory', label: 'Memory' }
             ] as const).map((tab) => (
               <button
                 key={tab.id}

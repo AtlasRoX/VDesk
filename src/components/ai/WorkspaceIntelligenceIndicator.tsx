@@ -20,15 +20,15 @@ export default function WorkspaceIntelligenceIndicator({
 }: WorkspaceIntelligenceIndicatorProps) {
   const getActivityIcon = () => {
     switch (activity) {
-      case 'coding': return '💻';
-      case 'watching': return '🎬';
-      case 'reading': return '📖';
-      case 'writing': return '✍️';
-      case 'meetings': return '🤝';
-      case 'design': return '🎨';
-      case 'research': return '🔍';
-      case 'learning': return '🎓';
-      default: return '🧠';
+      case 'coding': return '[CODE]';
+      case 'watching': return '[PLAY]';
+      case 'reading': return '[READ]';
+      case 'writing': return '[WRITE]';
+      case 'meetings': return '[MEET]';
+      case 'design': return '[DESIGN]';
+      case 'research': return '[SEARCH]';
+      case 'learning': return '[STUDY]';
+      default: return '[SYS]';
     }
   };
 
@@ -37,11 +37,11 @@ export default function WorkspaceIntelligenceIndicator({
       <div className="flex justify-between items-center border-b border-zinc-850/60 pb-2">
         <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[9px] text-zinc-500">
           {isLocked ? (
-            <span className="text-zinc-650">🔒 Autotuning Locked</span>
+            <span className="text-zinc-650">[LOCKED] Autotuning Locked</span>
           ) : (
             <>
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-zinc-400">🧠 AI Autotuner Active</span>
+              <span className="text-zinc-400">[SYS] AI Autotuner Active</span>
             </>
           )}
         </div>

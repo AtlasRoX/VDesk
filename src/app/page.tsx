@@ -961,7 +961,7 @@ export default function DesktopDashboard() {
   };
 
   const pairingUrl = serverInfo
-    ? `http://${serverInfo.ip}:${serverInfo.port}/mobile/test-xr/?token=${serverInfo.token}`
+    ? `https://vdesk-theta.vercel.app/mobile/test-xr/?token=${serverInfo.token}&ip=${serverInfo.ip}&port=${serverInfo.port}`
     : "";
 
   const getStatusColor = () => {
@@ -986,7 +986,7 @@ export default function DesktopDashboard() {
       {thermalThrottleAlert && (
         <div className="w-full max-w-4xl bg-red-950 border border-red-800 text-red-200 px-4 py-3 rounded-lg flex items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-2 text-xs font-semibold">
-            <span className="text-base animate-bounce">⚠️</span>
+            <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 bg-red-900/60 border border-red-700 rounded text-red-200">WARNING</span>
             <span>HEADSET OVERHEATING DETECTED: Throttling resolution profile to 720p (Performance) to cool down.</span>
           </div>
           <button 
@@ -1033,7 +1033,7 @@ export default function DesktopDashboard() {
                             onClick={handleRefreshSessionToken}
                             className="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-[10px] font-bold rounded shadow transition active:scale-[0.98]"
                           >
-                            🔄 Regenerate
+                            Regenerate Token
                           </button>
                         </div>
                       )}
@@ -1061,7 +1061,7 @@ export default function DesktopDashboard() {
               {/* Local-only Enforcement Toggle */}
               <div className="p-3.5 bg-zinc-950 border border-zinc-850 rounded text-[11px] flex justify-between items-center">
                 <div className="space-y-0.5">
-                  <div className="font-semibold text-zinc-200 font-mono uppercase text-[10px]">🔒 Localhost-Only USB Mode</div>
+                  <div className="font-semibold text-zinc-200 font-mono uppercase text-[10px]">Localhost-Only USB Mode</div>
                   <div className="text-[10px] text-zinc-500 leading-normal">Restrict stream to loopback (blocks LAN/Wi-Fi connection entirely)</div>
                 </div>
                 <button
@@ -1080,7 +1080,7 @@ export default function DesktopDashboard() {
               <div className="p-3.5 bg-zinc-950/60 border border-zinc-850 rounded text-[11px] space-y-2">
                 <div className="font-semibold text-zinc-300 font-mono text-[10px] uppercase flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping" />
-                  ⚡ High-Speed USB Mode
+                  High-Speed USB Mode
                 </div>
                 <p className="text-zinc-400 text-xs leading-relaxed">
                   Connect your phone via USB cable and enable <span className="text-zinc-200 font-medium">USB Debugging</span>. 
@@ -1106,9 +1106,9 @@ export default function DesktopDashboard() {
               {/* Media source selectors */}
               <div className="grid grid-cols-3 gap-1 bg-zinc-950 p-1 border border-zinc-850 rounded-md mt-2.5">
                 {([
-                  { id: "screenshare", label: "🖥️ Screen" },
-                  { id: "localvideo", label: "📁 Video" },
-                  { id: "youtube", label: "🎬 YouTube" }
+                  { id: "screenshare", label: "Screen" },
+                  { id: "localvideo", label: "Video" },
+                  { id: "youtube", label: "YouTube" }
                 ] as const).map((src) => (
                   <button
                     key={src.id}
@@ -1145,7 +1145,7 @@ export default function DesktopDashboard() {
                     <video ref={videoRef} className="w-full h-full object-contain" muted playsInline />
                   ) : (
                     <div className="text-center p-4">
-                      <span className="text-zinc-600 block text-2xl">🖥]️</span>
+                      <span className="text-zinc-600 block text-xs font-mono mb-2">[NO CAPTURE]</span>
                       <span className="text-xs text-zinc-500 block mt-2">No capture active</span>
                     </div>
                   )}
@@ -1183,7 +1183,7 @@ export default function DesktopDashboard() {
                 {/* Direct file selector */}
                 {!localVideoFile ? (
                   <label className="flex flex-col items-center justify-center border border-dashed border-zinc-800 rounded-lg p-8 bg-zinc-950/60 hover:bg-zinc-950 transition cursor-pointer select-none">
-                    <span className="text-3xl mb-2">📁</span>
+                    <span className="text-xs text-zinc-500 font-mono mb-2">[VIDEO FILE]</span>
                     <span className="text-xs text-zinc-300 font-semibold">Select Local Video File</span>
                     <span className="text-[10px] text-zinc-500 mt-1">Direct stream to VR mesh with Spatial Audio</span>
                     <input
@@ -1231,7 +1231,7 @@ export default function DesktopDashboard() {
                           onClick={handleLocalPlayToggle}
                           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded transition active:scale-[0.98]"
                         >
-                          {mediaPlaying ? "⏸ Pause" : "▶ Play"}
+                          {mediaPlaying ? "Pause" : "Play"}
                         </button>
                         
                         <label className="text-[10px] text-zinc-500 font-mono cursor-pointer hover:text-zinc-300 transition">
@@ -1300,14 +1300,14 @@ export default function DesktopDashboard() {
                           onClick={handleYoutubePlayToggle}
                           className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded transition active:scale-[0.98]"
                         >
-                          {mediaPlaying ? "⏸ Pause" : "▶ Play"}
+                          {mediaPlaying ? "Pause" : "Play"}
                         </button>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center border border-zinc-800 rounded-lg p-8 bg-zinc-950/60 text-zinc-500 text-center text-xs">
-                    <span>🎬</span>
+                    <span className="text-zinc-650 block text-[10px] font-mono mb-2">[YOUTUBE]</span>
                     <span className="mt-2 font-mono">YouTube embed coordinates will load here</span>
                   </div>
                 )}
@@ -1397,13 +1397,13 @@ export default function DesktopDashboard() {
                 onClick={triggerRemoteCalibrate}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-semibold rounded shadow transition active:scale-[0.98] flex items-center gap-1"
               >
-                🔄 Recenter Horizon
+                Recenter Horizon
               </button>
               <button
                 onClick={toggleRemoteHud}
                 className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-900 text-zinc-300 text-xs font-semibold rounded border border-zinc-750 transition active:scale-[0.98]"
               >
-                {remoteHudHidden ? "👁️ Show Headset HUD" : "🙈 Hide Headset HUD"}
+                {remoteHudHidden ? "Show Headset HUD" : "Hide Headset HUD"}
               </button>
             </div>
           </div>
@@ -1415,10 +1415,10 @@ export default function DesktopDashboard() {
                 <label className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block font-mono">Workspace Presets</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {([
-                    { id: "coding", label: "💻 Coding" },
-                    { id: "movie", label: "🎬 Cinema" },
-                    { id: "presentation", label: "📊 Board" },
-                    { id: "gaming", label: "🎮 Gaming" },
+                    { id: "coding", label: "Coding" },
+                    { id: "movie", label: "Cinema" },
+                    { id: "presentation", label: "Board" },
+                    { id: "gaming", label: "Gaming" },
                   ] as const).map((preset) => (
                     <button
                       key={preset.id}
@@ -1625,10 +1625,10 @@ export default function DesktopDashboard() {
                 <label className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block font-mono">Environment Room</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {([
-                    { id: "workspace", label: "💻 Office" },
-                    { id: "cinema", label: "🎬 Cinema" },
-                    { id: "space", label: "🌌 Space" },
-                    { id: "void", label: "⬛ Void" },
+                    { id: "workspace", label: "Office" },
+                    { id: "cinema", label: "Cinema" },
+                    { id: "space", label: "Space" },
+                    { id: "void", label: "Void" },
                   ] as const).map((env) => (
                     <button
                       key={env.id}
@@ -1814,7 +1814,7 @@ export default function DesktopDashboard() {
               }}
               className="px-2.5 py-1 bg-red-950/40 hover:bg-red-950/70 border border-red-900 text-red-400 text-[10px] font-mono rounded transition active:scale-[0.98]"
             >
-              🔥 Sim Overheat
+              [STRESS] Sim Overheat
             </button>
           </div>
 

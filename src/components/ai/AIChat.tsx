@@ -48,7 +48,7 @@ export default function AIChat({ context, onRuleTriggered, videoRef }: AIChatPro
     const snapshot = captureVideoFrame(videoRef.current);
     
     const userMessageContent = snapshot 
-      ? `📷 [Real-Time Frame Captured]\n${userText}` 
+      ? `[FRAME CAPTURED]\n${userText}` 
       : userText;
 
     setInputValue('');
@@ -106,7 +106,7 @@ export default function AIChat({ context, onRuleTriggered, videoRef }: AIChatPro
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-4 py-3 text-left flex justify-between items-center text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-mono select-none hover:bg-zinc-850/40 transition"
       >
-        <span>💬 AI Conversational Interface</span>
+        <span>[CHAT] AI Conversational Interface</span>
         <span className="text-[9px] text-zinc-550">{isOpen ? 'COLLAPSE' : 'EXPAND'}</span>
       </button>
 

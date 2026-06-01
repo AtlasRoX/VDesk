@@ -107,7 +107,7 @@ export class NIMClient {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      this.apiKey = process.env.NEXT_PUBLIC_NIM_API_KEY || null;
+      this.apiKey = process.env.NEXT_PUBLIC_NIM_API_KEY || (typeof window !== 'undefined' ? localStorage.getItem("NIM_API_KEY") : null) || null;
     }
   }
 
@@ -124,10 +124,15 @@ export class NIMClient {
     const model = CAPABILITY_MODELS[capability];
     const startTime = Date.now();
 
+    // Dynamically reload API key from localStorage to immediately reflect UI modifications
+    if (typeof window !== 'undefined') {
+      this.apiKey = process.env.NEXT_PUBLIC_NIM_API_KEY || localStorage.getItem("NIM_API_KEY") || null;
+    }
+
     console.log(`NIM Router: Directing capability '${capability}' to model '${model}'`);
 
     if (!this.apiKey) {
-      const errorMsg = 'NVIDIA NIM API Key not configured. Please define NEXT_PUBLIC_NIM_API_KEY inside your local environment.';
+      const errorMsg = 'NVIDIA NIM API Key not configured. Please define NEXT_PUBLIC_NIM_API_KEY inside your local environment or save it via the Workspace Co-Pilot Command Center settings.';
       if (onChunk) {
         onChunk(`[ERROR] ${errorMsg}`);
       }

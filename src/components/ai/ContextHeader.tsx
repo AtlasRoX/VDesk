@@ -23,11 +23,11 @@ export default function ContextHeader({ context }: ContextHeaderProps) {
 
   const getActivityIcon = () => {
     switch (context.activity) {
-      case 'coding': return '💻';
-      case 'watching': return '🎬';
-      case 'reading': return '📖';
-      case 'research': return '🔍';
-      default: return '💤';
+      case 'coding': return '[CODE]';
+      case 'watching': return '[PLAY]';
+      case 'reading': return '[READ]';
+      case 'research': return '[SEARCH]';
+      default: return '[IDLE]';
     }
   };
 
@@ -44,7 +44,7 @@ export default function ContextHeader({ context }: ContextHeaderProps) {
         <div className="space-y-0.5 border-r border-zinc-850/80 pr-2">
           <div className="text-[9px] text-zinc-500 font-mono uppercase tracking-wider">Detected App</div>
           <div className="text-xs font-bold text-white flex items-center gap-1.5 mt-0.5 truncate">
-            <span>{context.app === 'VS Code' ? '📦' : context.app === 'YouTube' ? '🔴' : '🌐'}</span>
+            <span>{context.app === 'VS Code' ? '[APP]' : context.app === 'YouTube' ? '[PLAY]' : '[WEB]'}</span>
             <span>{context.app}</span>
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function ContextHeader({ context }: ContextHeaderProps) {
         <div className="space-y-0.5 border-r border-zinc-850/80 pr-2">
           <div className="text-[9px] text-zinc-500 font-mono uppercase tracking-wider">Workspace Mode</div>
           <div className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5 mt-0.5 truncate">
-            <span>🛡️</span>
+            <span>[SEC]</span>
             <span>{context.activeMode} Mode</span>
           </div>
         </div>

@@ -72,6 +72,9 @@ export default function TestXRPage() {
   const [manualPort, setManualPort] = useState("8080");
   const [manualToken, setManualToken] = useState("");
 
+  const [customIp, setCustomIp] = useState<string | null>(null);
+  const [customPort, setCustomPort] = useState<string | null>(null);
+
   // PIN pairing state — lets user enter 6-digit code from PC companion
   const [pinInput, setPinInput] = useState("");
   const [pinPairingError, setPinPairingError] = useState<string | null>(null);
@@ -234,6 +237,11 @@ export default function TestXRPage() {
         // Parse pairing token from query string
         const urlParams = new URLSearchParams(window.location.search);
         const pairingToken = urlParams.get("token");
+        const ipParam = urlParams.get("ip");
+        const portParam = urlParams.get("port");
+
+        if (ipParam) setCustomIp(ipParam);
+        if (portParam) setCustomPort(portParam);
 
         if (pairingToken) {
           setToken(pairingToken);
@@ -335,8 +343,14 @@ export default function TestXRPage() {
       return;
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const ipParam = urlParams.get("ip");
+    const portParam = urlParams.get("port");
+
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const signalingUrl = `${protocol}//${window.location.host}/ws/signaling`;
+    const signalingUrl = ipParam && portParam
+      ? `wss://${ipParam}:${portParam}/ws/signaling`
+      : `${protocol}//${window.location.host}/ws/signaling`;
 
     console.log(`Connecting to signaling at ${signalingUrl} with token ${token}`);
     const provider = new WebRTCStreamingProvider();
@@ -691,7 +705,8 @@ export default function TestXRPage() {
     const cleanToken = manualToken.trim();
     const cleanPort = manualPort.trim() || "8080";
     
-    window.location.href = `http://${cleanIp}:${cleanPort}/mobile/test-xr/?token=${cleanToken}`;
+    // Redirect to local page path preserving the HTTPS context (handles Vercel fallback)
+    window.location.href = `/mobile/test-xr/?token=${cleanToken}&ip=${cleanIp}&port=${cleanPort}`;
   };
 
   /**
@@ -928,6 +943,55 @@ export default function TestXRPage() {
       {/* Hidden audio element to keep the WebRTC audio track active on mobile Chrome */}
       <audio ref={audioElRef} className="hidden" playsInline />
 
+      {/* Self-Signed TLS Certificate Trust Helper Card */}
+      {connectionState !== "connected" && connectionState !== "demo_sandbox" && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-zinc-955/98 p-6 text-center font-sans space-y-6">
+          <div className="w-full max-w-sm p-8 bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl space-y-4">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-950 border border-blue-900 text-blue-400 text-[10px] font-mono uppercase">
+              WebRTC Signaling Status
+            </div>
+            
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              {connectionState === "connecting" ? "Connecting to PC..." : "Connection Pending"}
+            </h2>
+            
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+              Attempting to connect to your local PC companion stream at:
+              <span className="block mt-1.5 font-mono text-[9px] text-zinc-300 bg-zinc-950 p-2 rounded border border-zinc-850 truncate">
+                {customIp && customPort ? `wss://${customIp}:${customPort}/ws/signaling` : `wss://${window.location.host}/ws/signaling`}
+              </span>
+            </p>
+
+            {customIp && customPort && (
+              <div className="p-3.5 bg-zinc-950 border border-zinc-850 rounded text-left space-y-2.5">
+                <div className="text-[10px] uppercase font-mono font-semibold text-zinc-400">
+                  Local HTTPS Authorization
+                </div>
+                <p className="text-[10px] text-zinc-500 leading-normal">
+                  Your PC companion server generates a secure, self-signed local TLS certificate. To allow your mobile browser to stream video data securely, you must authorize it:
+                </p>
+                <a
+                  href={`https://${customIp}:${customPort}/ping`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full text-center py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-bold font-sans rounded transition shadow cursor-pointer select-none active:scale-[0.98]"
+                >
+                  Unlock Stream Certificate
+                </a>
+                <span className="block text-[8px] text-zinc-650 text-center leading-normal">
+                  (Click &quot;Advanced&quot; {`->`} &quot;Proceed anyway&quot;. You will see &quot;pong&quot;. Then close that tab and return here!)
+                </span>
+              </div>
+            )}
+            
+            <div className="flex justify-center items-center gap-2 text-[10px] font-mono text-zinc-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              STATUS: {connectionState.toUpperCase()}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Symmetrical split stereoscopic HUD caution warning panel for passive VR Box */}
       {thermalWarning && (
         <div className="fixed inset-x-0 top-16 z-50 pointer-events-none flex w-screen">
@@ -935,7 +999,7 @@ export default function TestXRPage() {
           <div className="w-1/2 flex justify-center px-4">
             <div className="bg-red-950/90 border border-red-500/50 text-red-200 px-4 py-2 rounded-md shadow-lg backdrop-blur text-center max-w-[280px]">
               <div className="text-xs font-bold font-mono tracking-wider animate-pulse flex items-center justify-center gap-1.5">
-                <span>⚠️</span> THERMAL OVERHEAT WARNING
+                <span>[WARNING]</span> THERMAL OVERHEAT WARNING
               </div>
               <div className="text-[9px] text-red-300 mt-1 font-sans">
                 Device temperature high. Lowering stream quality to cool down.
@@ -946,7 +1010,7 @@ export default function TestXRPage() {
           <div className="w-1/2 flex justify-center px-4">
             <div className="bg-red-950/90 border border-red-500/50 text-red-200 px-4 py-2 rounded-md shadow-lg backdrop-blur text-center max-w-[280px]">
               <div className="text-xs font-bold font-mono tracking-wider animate-pulse flex items-center justify-center gap-1.5">
-                <span>⚠️</span> THERMAL OVERHEAT WARNING
+                <span>[WARNING]</span> THERMAL OVERHEAT WARNING
               </div>
               <div className="text-[9px] text-red-300 mt-1 font-sans">
                 Device temperature high. Lowering stream quality to cool down.
@@ -1481,7 +1545,7 @@ export default function TestXRPage() {
           <div className="mt-8 space-y-4">
             {xrSupported === false ? (
               <div className="p-3 bg-red-950/30 border border-red-900/50 rounded text-red-400 text-xs font-mono">
-                ⚠️ WebXR is not supported on this device/browser. Using native SBS fallback mode.
+                [WARNING] WebXR is not supported on this device/browser. Using SBS fallback mode.
               </div>
             ) : xrSupported === true ? (
               <button
